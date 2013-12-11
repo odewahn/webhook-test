@@ -1,4 +1,1359 @@
-<section data-type="chapter">
-<h1>This Is a Heading</h1>
-<p>This is some text.</p>
-</section>
+<div class="header">
+<p>O&rsquo;Reilly Media, Inc. � date �12/11/13�</p>
+</div>
+
+<p class="chapterLabel,cl"><b>6</b></p>
+
+<p class="chapterTitle,ct">CSS3: Advanced Page Effects</p>
+
+<p class="body_Text,b">The last several chapters showed how to use WebGL to create stunning content featuring hardware-accelerated rendering of 3D objects, scenes and animations. As powerful as WebGL is, as of this writing it has a fundamental limitation in that arbitrary HTML content cannot be mapped as a texture on the surface of a 3D object. If we want to apply the 3D techniques we have seen in previous chapters to elements on a page, we have to turn to another HTML5 innovation: CSS3.</p>
+
+<p class="body_Text,b">With CSS3, single elements or entire pages can be brought to life with animation, image filtering and 2D or 3D transformations. These features enable the creation of a variety of 3D effects for use in simple games, engaging banner ads and intuitive user interfaces. In contrast with WebGL, which requires at least rudimentary 3D programming knowledge plus mastery of a library such as Three.js, using CSS3 requires knowing only markup, CSS and basic JavaScript, perhaps with an assist from a framework like jQuery. This makes CSS3 development much easier than WebGL; however, developers only have access to the features built in to the browser. Put another way, 3D CSS trades simplicity and ease of use for power and flexibility.</p>
+
+<p class="body_Text,b">The 3D features of CSS3 trace their roots back to 3D transitions initially developed by Apple for its Core Animation framework, powering now-familiar user interface effects such as the screen transitions in the iOS Weather application, depicted in Figure 6-1. The 3D advances in CSS3 were originally proposed by the WebKit development team in 2009 and 2010, and first taken to market by Apple&rsquo;s Safari teams for Mac OS and iOS. They were later adopted in Chrome and, ultimately, by all browser makers.</p>
+
+<p class="figureHolder,gh"><img alt="image1" src="embedded:image1" /></p>
+
+<p class="figureTitle,gt"><i>Figure 6-1. Screen Transitions in the iOS Weather App </i></p>
+
+<p class="body_Text,b">The ability to apply 3D effects to HTML elements opens up similar possibilities for web page content. Figure 6-2 shows Snowstack (http://www.satine.org/research/webkit/snowleopard/snowstack.html) a showcase developed by the Safari team. Snowstack is a photo viewing visual effects library that uses pure HTML, 3D CSS and JavaScript to render a Flickr feed in perspective. With Snowstack, the user can navigate through an apparently infinite set of photo tiles using the arrow keys on the keyboard. The application works in all browsers and devices. While Snowstack is really a technology demo, it points to the potential for using 3D CSS to visualize and explore vast amounts of information.</p>
+
+<p class="figureHolder,gh"><img alt="image2" src="embedded:image2" /></p>
+
+<p class="figureTitle,gt"><i>Figure 6-2. Snowstack, a CSS-Based 3D Photo Viewer (http://www.satine.org/research/webkit/snowleopard/snowstack.html)</i></p>
+
+<p class="body_Text,b">Many developers are exploring 3D CSS to create innovative web content. Beyond simply transforming flat tiles, some programmers have figured out how to simulate rendering of full 3D objects, and as we will see later in the chapter, one enterprising soul has even used 3D CSS to build prototypes of a first person shooter game! 3D CSS can also be used in conjunction with WebGL, with the latter handling true 3D rendering tasks and the former used to overlay and/or integrate HTML elements for the user interface.</p>
+
+<p class="body_Text,b">CSS3 is a collection of specifications that allow dynamic effects to be applied to the elements on a page. This chapter covers the various CSS technologies used to build 3D effects:</p>
+
+<p class="listBullet,lb">CSS Transforms. 3D operations (translate, rotate, scale) applied to an entire element.</p>
+
+<p class="listBullet,lb">CSS Transitions. Simple changes applied to CSS properties over time. Like tweens discussed in the last chapter, CSS transitions are excellent for one-time effects.</p>
+
+<p class="listBullet,lb">CSS Animations. Complex changes applied to CSS properties over time, using key frame data.</p>
+
+<h1>CSS Transforms</h1>
+
+<p class="body_Text,b">Core to 3D CSS development is the ability to manipulate page elements using CSS Transforms. The CSS Transforms specification (http://www.w3.org/TR/css3-transforms/) represents the convergence of earlier 2D and 3D work on using CSS to modify the position, orientation, scale and other layout properties of page elements using transformation operations rather than simple left/top and width/height properties.</p>
+
+<p class="body_Text,b">As a refresher, 3D graphics use a three dimensional coordinate system that employs a third axis, Z, to represent positions in and out of the screen, creating a sense of depth. Figure 6-3 depicts the 3D coordinate system used for CSS. Note that, in contrast with traditional 3D systems, the positive Y-axis points down instead of up, to be consistent with the 2D XY system used for the web browser&rsquo;s page and window coordinates.</p>
+
+<p class="figureHolder,gh"><img alt="image3.png" src="embedded:image3.png" /></p>
+
+<p class="figureTitle,gt"><i>Figure 6-3. The 3D Coordinate system for CSS, with positive y-axis pointing down. Adapted from https://commons.wikimedia.org/wiki/File:3D_coordinate_system.svg Creative Commons Attribution-Share Alike 3.0 Unported License</i></p>
+
+<h2>Using 3D Transforms</h2>
+
+<p class="body_Text,b">CSS 3D transforms are specified like any other CSS: using properties. The CSS3 specification defines several properties for transforming elements. Let&rsquo;s start with an example. Figure 6-4 depicts three elements with different transforms applied: translation, rotation and scale.</p>
+
+<p class="figureHolder,gh"><img alt="image4" src="embedded:image4" /></p>
+
+<p class="figureTitle,gt"><i>Figure 6-4. CSS 3D Transforms: translate, rotate and scale. </i></p>
+
+<p class="body_Text,b">The source code for this example can be found in the file Chapter 6/css3dtransforms.html and the corresponding CSS file, css/css3dtransforms.css. The fragment in Example 6-1 shows the HTML that defines the first DIV element, applying a 3D translation.</p>
+
+<p class="exampleTitle,xt"><i>Example 6-1. Element with CSS 3D Transforms Applied </i></p>
+
+<p class="code,x">&lt;div id=&quot;card1&quot; class=&quot;container perspective&quot;&gt;</p>
+
+<p class="code,x">&lt;div class=&quot;legend&quot;&gt;</p>
+
+<p class="code,x">Translate</p>
+
+<p class="code,x">&lt;/div&gt;</p>
+
+<p class="code,x">&lt;div class=&quot;code&quot;&gt;{translateX(20px) translateY(20px) translateZ(-100px);}&lt;/div&gt;</p>
+
+<p class="code,x">&lt;div class=&quot;cardBorder&quot;&gt;</p>
+
+<p class="code,x">&lt;div class=&quot;card translate&quot;&gt;</p>
+
+<p class="code,x">&lt;p&gt;This element is translated.&lt;/p&gt;</p>
+
+<p class="code,x">&lt;img width=96 height=96 src=&quot;../images/HTML5rawkes.png&quot;&gt;&lt;/img&gt;</p>
+
+<p class="code,x">&lt;p&gt;Transformed elements can contain anything: text, images, divs, tables...&lt;/p&gt;</p>
+
+<p class="code,x">&lt;/div&gt;</p>
+
+<p class="code,x">&lt;/div&gt;</p>
+
+<p class="code,x">&lt;/div&gt;</p>
+
+<p class="code,x">&nbsp;</p>
+
+<p class="body_Text,b">The text in bold specifies two classes for the innermost DIV element: card and translate. card defines the properties common to all 3 of the &ldquo;card&rdquo; elements on the page: for example the solid border, drop shadow and rounded corners. The translate class defines the 3D translation. Example 6-2 shows the CSS definitions for these two classes, as well as cardBorder, which is used on the parent element of the card to display a dotted line border indicating where the card would be if it had no transforms applied to it. For now, ignore the &ndash;moz-transform-style property in these declarations. They are required for proper functioning in Firefox, as we will describe in the next section on perspective.</p>
+
+<p class="exampleTitle,xt"><i>Example 6-2. CSS to Define a Translation Transform </i></p>
+
+<p class="code,x">.cardBorder {</p>
+
+<p class="code,x">position: absolute;</p>
+
+<p class="code,x">width: 100%;</p>
+
+<p class="code,x">height: 80%;</p>
+
+<p class="code,x">top:30%;</p>
+
+<p class="code,x">border:1px dotted;</p>
+
+<p class="code,x">border-radius:0 0 4px 4px;</p>
+
+<p class="code,x">-moz-transform-style: preserve-3d;</p>
+
+<p class="code,x">}</p>
+
+<p class="code,x">&nbsp;</p>
+
+<p class="code,x">.card {</p>
+
+<p class="code,x">position: absolute;</p>
+
+<p class="code,x">width: 99%;</p>
+
+<p class="code,x">height: 99%;</p>
+
+<p class="code,x">border:1px solid;</p>
+
+<p class="code,x">border-radius: 4px;</p>
+
+<p class="code,x">box-shadow: 2px 2px 2px;</p>
+
+<p class="code,x">-moz-transform-style: preserve-3d;</p>
+
+<p class="code,x">}</p>
+
+<p class="code,x">&nbsp;</p>
+
+<p class="codeEmphasis,xe"><b>.translate { </b></p>
+
+<p class="codeEmphasis,xe"><b>-webkit-transform: translateX(20px) translateY(20px) translateZ(-100px); </b></p>
+
+<p class="codeEmphasis,xe"><b>-moz-transform: translateX(20px) translateY(20px) translateZ(-100px); </b></p>
+
+<p class="codeEmphasis,xe"><b>-o-transform: translateX(20px) translateY(20px) translateZ(-100px); </b></p>
+
+<p class="codeEmphasis,xe"><b>transform: translateX(20px) translateY(20px) translateZ(-100px); </b></p>
+
+<p class="codeEmphasis,xe"><b>} </b></p>
+
+<p class="body_Text,b">The translate class specifies a CSS 3D transform by setting its transform property. In this example, the element is translated 20 pixels in X and Y, respectively, and 100 pixels along negative Z (into the screen). In general, transform can be used to create transforms by applying one or more transform methods to the element. In addition to translation, CSS supports methods for rotation and scale, arbitrary matrix transformation and perspective projection. The CSS 3D transform methods are summarized in Table 6-1.</p>
+
+<p class="tableTitle,tt"><i>Table 6-1. CSS 3D Transform Methods</i></p>
+
+<table>
+	<tbody>
+		<tr>
+			<td>
+			<p class="cellHeading,th"><b>Method</b></p>
+			</td>
+			<td>
+			<p class="cellHeading,th"><b>Description</b></p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+			<p class="cellCode,tc">translateX(x)</p>
+			</td>
+			<td>
+			<p class="cellBody,tb">Translation along the X-axis</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+			<p class="cellCode,tc">translateY(y)</p>
+			</td>
+			<td>
+			<p class="cellBody,tb">Translation along the Y-axis</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+			<p class="cellCode,tc">translateZ(z)</p>
+			</td>
+			<td>
+			<p class="cellBody,tb">Translation along the Z-axis</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+			<p class="cellCode,tc">translate3d(x, y, z)</p>
+			</td>
+			<td>
+			<p class="cellBody,tb">Translation along X-, Y- and Z- axes</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+			<p class="cellCode,tc">rotateX(angle)</p>
+			</td>
+			<td>
+			<p class="cellBody,tb">Rotation about the X-axis</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+			<p class="cellCode,tc">rotateY(angle)</p>
+			</td>
+			<td>
+			<p class="cellBody,tb">Rotation about the Y-axis</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+			<p class="cellCode,tc">rotateY(angle)</p>
+			</td>
+			<td>
+			<p class="cellBody,tb">Rotation about the Z-axis</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+			<p class="cellCode,tc">rotate3d(x, y, z, angle)</p>
+			</td>
+			<td>
+			<p class="cellBody,tb">Rotation about an arbitrary axis</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+			<p class="cellCode,tc">scaleX(x)</p>
+			</td>
+			<td>
+			<p class="cellBody,tb">Scale along the X-axis</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+			<p class="cellCode,tc">scaleY(y)</p>
+			</td>
+			<td>
+			<p class="cellBody,tb">Scale along the Y-axis</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+			<p class="cellCode,tc">scaleZ(z)</p>
+			</td>
+			<td>
+			<p class="cellBody,tb">Scale along the Z-axis</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+			<p class="cellCode,tc">scale3d(x, y, z)</p>
+			</td>
+			<td>
+			<p class="cellBody,tb">Scale along X-, Y- and Z- axes</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+			<p class="cellCode,tc">matrix3d(&hellip;)</p>
+			</td>
+			<td>
+			<p class="cellBody,tb">Define arbitrary 4x4 transformation matrix with 16 values</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+			<p class="cellCode,tc">perspective(depth)</p>
+			</td>
+			<td>
+			<p class="cellBody,tb">Define perspective projection of depth pixels</p>
+			</td>
+		</tr>
+	</tbody>
+</table>
+
+<p class="body_Text,b">The second and third cards are transformed in a similar manner, by using the classes rotate and scale defined in the CSS:</p>
+
+<p class="code,x">.rotate {</p>
+
+<p class="code,x">-webkit-transform: rotateY(30deg);</p>
+
+<p class="code,x">-moz-transform: rotateY(30deg);</p>
+
+<p class="code,x">-o-transform: rotateY(30deg);</p>
+
+<p class="code,x">transform: rotateY(30deg);</p>
+
+<p class="code,x">}</p>
+
+<p class="code,x">&nbsp;</p>
+
+<p class="code,x">.scale {</p>
+
+<p class="code,x">-webkit-transform: scaleX(1.25) scaleY(.75);</p>
+
+<p class="code,x">-moz-transform: scaleX(1.25) scaleY(.75);</p>
+
+<p class="code,x">-o-transform: scaleX(1.25) scaleY(.75);</p>
+
+<p class="code,x">transform: scaleX(1.25) scaleY(.75);</p>
+
+<p class="code,x">}</p>
+
+<p class="code,x">&nbsp;</p>
+
+<p class="body_Text,b">Rotation values can be specified in degrees, radians or gradians (1/400th of a circle), for example, 90deg, 1.57rad or 100grad. Scale values are scalars that multiply along each axis, i.e. an unscaled element has a scale of 1 along each axis.</p>
+
+<p class="note,n">Note the use of browser-specific prefixes in the CSS, e.g. &ndash;webkit-transform. This is required to ensure cross-browser support because CSS transforms were experimental among browsers for several years. This is cumbersome&mdash; but it is among many such CSS features that require use of browser prefixes, and developers have grown accustomed to dealing with it. If you find all the duplication annoying, you may want to look into using a stylesheet-generation tool such as LESS (http://lesscss.org/) to ease the pain. From time to time we will omit the browser-specific prefixes in our examples, for brevity. Always make sure to use them in your code.</p>
+
+<p class="body_Text,b">CSS supports an additional property, transform-origin, which allows the developer to specify the origin of transformations. This property defaults to 50% 50% 0, i.e. the center of the coordinate system. By changing it, you can have objects rotate about a different point than the center. transform-origin can be specified in any CSS offset unit, such as left, center, right, % or a CSS distance value (pixels, inches, em spaces, etc.).</p>
+
+<h2>Applying Perspective</h2>
+
+<p class="body_Text,b">You may have noticed the use of the class perspective for each of the top-level DIV elements in the previous example. CSS 3D transforms can be applied with or without using a perspective projection, though it is more useful when using a perspective projection.</p>
+
+<p class="body_Text,b">Perspective projections are very simple to define in CSS3. Example 6-3 shows the CSS for defining perspective.</p>
+
+<p class="exampleTitle,xt"><i>Example 6-3. CSS perspective property</i></p>
+
+<p class="code,x">.perspective {</p>
+
+<p class="code,x">-webkit-perspective: 400px;</p>
+
+<p class="code,x">-moz-perspective: 400px;</p>
+
+<p class="code,x">-o-perspective: 400px;</p>
+
+<p class="code,x">perspective: 400px;</p>
+
+<p class="code,x">}</p>
+
+<p class="code,x">&nbsp;</p>
+
+<p class="code,x">.noperspective {</p>
+
+<p class="code,x">-webkit-perspective: 0px;</p>
+
+<p class="code,x">-moz-perspective: 0px;</p>
+
+<p class="code,x">-o-perspective: 0px;</p>
+
+<p class="code,x">perspective: 0px;</p>
+
+<p class="code,x">}</p>
+
+<p class="body_Text,b">We define a CSS class, perspective, for use with elements to which we want to apply perspective projection. The value we supply represents the distance from the view plane to the XY plane (z=0). Perspective can be specified in any CSS distance unit: pixels, points, inches, em spaces and so on. The CSS file also defines a second class, noperspective, which is handy for ensuring an element is not rendered with perspective. The values in this class are set to zero, which is the default.</p>
+
+<p class="note,n">While the details of CSS perspective are different from those of WebGL, the concepts are the same. If you need a refresher on the topic, there is a detailed discussion in Chapter 1.</p>
+
+<p class="body_Text,b">To illustrate the contrast between elements rendered with and without perspective, let&rsquo;s look at an example. Open the example file Chapter 6/css3dperspective.html. You will see two cards. The left one is rendered with perspective, the right one without. The only difference between the two elements is the use of the CSS perspective property; each card is rotated by 30 degrees about the Y-axis; however without the use of perspective, the element on the right appears squished horizontally instead of rotated. See Figure</p>
+
+<p class="figureHolder,gh"><img alt="image5" src="embedded:image5" /></p>
+
+<p class="figureTitle,gt"><i>Figure 6-5. CSS Transforms and perspective: the element on the left is rendered with perspective, the element on the right without. HTML5 Rawkes Logo by Phil Banks https://twitter.com/emirpprime</i></p>
+
+<p class="body_Text,b">Perspective can also be applied to elements using the perspective() transform function described in Table 6-1. However, in practice it usually better to keep the perspective value separate from the transform value using the two distinct properties. Otherwise you will need to re-supply the perspective value every time you want to change the other transform function values.</p>
+
+<h2>Creating a Transform Hierarchy</h2>
+
+<p class="body_Text,b">CSS3 allows 3D transforms to be inherited throughout the DOM object hierarchy. An element with 3D transforms defined for it can either inherit those of its ancestors or ignore them, based on the value of the transform-style property.</p>
+
+<p class="body_Text,b">Figure 6-6 illustrates how transform-style can be used to create a transform hierarchy. Each of the card elements is transformed with a 30-degree rotation about Y. Each card also has a childCard with its own a 30-degree rotation about Y. Note that the left card&rsquo;s child appears to be rotated 30 degrees away from the plane of its parent; however the right card&rsquo;s child appears to be in the same plane as its parent.</p>
+
+<p class="figureHolder,gh"><img alt="image6" src="embedded:image6" /></p>
+
+<p class="figureTitle,gt"><i>Figure 6-6. Creating a 3D transform hierarchy with CSS</i></p>
+
+<p class="body_Text,b">The code for this example can be found in files Chapter 6/css3dhierarchy.html and css/css3dhierarchy.css. The HTML defines two DOM element hierarchies that are nearly identical, except that the first card uses a class hierarchy, while the second uses one called nohierarchy.</p>
+
+<p class="code,x">&lt;div id=&quot;hierarchy1&quot; class=&quot;container perspective&quot;&gt;</p>
+
+<p class="code,x">&lt;div class=&quot;legend&quot;&gt;</p>
+
+<p class="code,x">With Hierarchy</p>
+
+<p class="code,x">&lt;/div&gt;</p>
+
+<p class="code,x">&lt;div class=&quot;code&quot;&gt;{transform-style: preserve-3d;}&lt;/div&gt;</p>
+
+<p class="code,x">&lt;div class=&quot;cardBorder&quot;&gt;</p>
+
+<p class="code,x">&lt;div class=&quot;card hierarchy rotate&quot;&gt;</p>
+
+<p class="code,x">&lt;p&gt;This element is a parent.&lt;/p&gt;</p>
+
+<p class="code,x">&lt;img width=96 height=96 src=&quot;../images/HTML5rawkes.png&quot;&gt;&lt;/img&gt;</p>
+
+<p class="code,x">&lt;p&gt;&lt;/p&gt;</p>
+
+<p class="code,x">&lt;div class=&quot;childCard rotate&quot;&gt;</p>
+
+<p class="code,x">&lt;div class=&quot;code&quot;&gt;{rotateY(30deg);}&lt;/div&gt;</p>
+
+<p class="code,x">&lt;p&gt;This element is a child.&lt;/p&gt;</p>
+
+<p class="code,x">&lt;/div&gt;</p>
+
+<p class="code,x">&lt;/div&gt;</p>
+
+<p class="code,x">&lt;/div&gt;</p>
+
+<p class="code,x">&lt;/div&gt;</p>
+
+<p class="code,x">&nbsp;</p>
+
+<p class="code,x">&lt;div id=&quot;hierarchy2&quot; class=&quot;container perspective&quot;&gt;</p>
+
+<p class="code,x">&lt;div class=&quot;legend&quot;&gt;</p>
+
+<p class="code,x">Without Hierarchy</p>
+
+<p class="code,x">&lt;/div&gt;</p>
+
+<p class="code,x">&lt;div class=&quot;code&quot;&gt;{transform-style: flat;}&lt;/div&gt;</p>
+
+<p class="code,x">&lt;div class=&quot;cardBorder&quot;&gt;</p>
+
+<p class="code,x">&lt;div class=&quot;card nohierarchy rotate&quot;&gt;</p>
+
+<p class="code,x">&lt;p&gt;This element is a parent.&lt;/p&gt;</p>
+
+<p class="code,x">&lt;img width=96 height=96 src=&quot;../images/HTML5rawkes.png&quot;&gt;&lt;/img&gt;</p>
+
+<p class="code,x">&lt;p&gt;&lt;/p&gt;</p>
+
+<p class="code,x">&lt;div class=&quot;childCard rotate&quot;&gt;</p>
+
+<p class="code,x">&lt;div class=&quot;code&quot;&gt;{rotateY(30deg);}&lt;/div&gt;</p>
+
+<p class="code,x">&lt;p&gt;This element is a child.&lt;/p&gt;</p>
+
+<p class="code,x">&lt;/div&gt;</p>
+
+<p class="code,x">&lt;/div&gt;</p>
+
+<p class="code,x">&lt;/div&gt;</p>
+
+<p class="code,x">&lt;/div&gt;</p>
+
+<p class="body_Text,b">The CSS definitions for the classes hierarchy and nohierarchy are as follows:</p>
+
+<p class="code,x">.hierarchy {</p>
+
+<p class="code,x">-webkit-transform-style: preserve-3d;</p>
+
+<p class="code,x">-moz-transform-style: preserve-3d;</p>
+
+<p class="code,x">-o-transform-style: preserve-3d;</p>
+
+<p class="code,x">transform-style: preserve-3d;</p>
+
+<p class="code,x">}</p>
+
+<p class="code,x">&nbsp;</p>
+
+<p class="code,x">.nohierarchy {</p>
+
+<p class="code,x">-webkit-transform-style: flat;</p>
+
+<p class="code,x">-moz-transform-style: flat;</p>
+
+<p class="code,x">-o-transform-style: flat;</p>
+
+<p class="code,x">transform-style: flat;</p>
+
+<p class="code,x">}</p>
+
+<p class="body_Text,b">The transform-style property accepts two values: flat (the default), which specifies that transforms in descendant DOM elements not be applied; and preserve-3d, which tells the browser to apply transforms in descendants. By using preserve-3D throughout, an application can create a deep hierarchy of 3D objects, especially in combination with the other techniques described in this chapter.</p>
+
+<p class="note,n">Browser compatibility alert: in the first example in this section, we glossed over one detail in the definitions of the card and cardBorder CSS classes. They contained the statement</p>
+
+<p class="note,n">-moz-transform-style: preserve-3d;</p>
+
+<p class="note,n">Apparently the Firefox browser, unlike WebKit-based browsers, does not propagate the value of transform-style to its descendants. Without explicitly setting it in each descendant, not only will child transforms not work, but perspective rendering is also disabled. The workaround is to set transform-style to preserve-3d for every descendant the DOM hierarchy. This is unfortunate but necessary.</p>
+
+<p class="note,n">The worst part of this situation is that the interpretation varies across browsers. Apparently Internet Explorer version 10 doesn&rsquo;t support the feature at all, but the plan is to add it for IE 11.</p>
+
+<h2>Controlling Back Face Rendering</h2>
+
+<p class="body_Text,b">In classic 3D rendering, when a polygon faces away from the viewer, the rendering system can either display the back of the polygon, known as the back face, or not display it, depending on settings controlled by the programmer. CSS3 transforms also provide this capability. If an element is rotated such that it faces away from the viewer, it will be displayed or not based on the backface-visibility transform property.</p>
+
+<p class="body_Text,b">CSS3 back face rendering is important for creating the illusion of double-sided objects. Let&rsquo;s say we want to create a screen flip transition like those in the iOS Weather app depicted in Figure 6-1. Creating this effect requires careful construction of our markup, and correct use of backface-visibility. Figure 6-7 illustrates how to use the technique in practice.</p>
+
+<p class="body_Text,b">Open the file Chapter 6/css3dbackfaces.html to see back face rendering in action. There are four cards. On the top row, there are two single-sided cards, rendered with back face visibility on and off, respectively. The card on the top left is rotated to face away from the viewer and rendered with back faces visible; the one on the top right is rotated away from the viewer and rendered with back faces hidden. Note that we can see the card on the top left, but the text &ldquo;FRONT&rdquo; is rendered in reverse, while the card on the top right is not visible.</p>
+
+<p class="body_Text,b">On the bottom row we see two double-sided cards, rendered with back face visibility on and off, respectively. Again, the objects have been rotated such that their front faces are away from the viewer. However, these cards define an additional element, with the text &ldquo;BACK&rdquo;, that is rotated toward the viewer to simulate a double-sided object. The bottom left card has back face visibility on, and because it also has a 0.8 opacity value, we can see through the front face to the reversed text &ldquo;FRONT.&rdquo; Conversely, the bottom right card turns back face visibility off and so hides the front side of the card. The bottom right card demonstrates the proper technique for using CSS to simulate a double-sided object. Let&rsquo;s look at the code.</p>
+
+<p class="figureHolder,gh"><img alt="image7.png" src="embedded:image7.png" /></p>
+
+<p class="figureTitle,gt"><i>Figure 6-7. Using Backface Visibility to Create Double-Sided Objects</i></p>
+
+<p class="body_Text,b">Example 6-4 shows the HTML code for this page. Elements with back faces visible are defined using the class backface; elements with back faces hidden are defined using the class nobackface. In order to create the double-sided cards on the bottom row, we actually need to create two card elements: one for the front and another for the back as defined in the CSS classes frontside and backside, respectively. The card on the bottom right of the page combines those classes with the nobackface class to create a card that displays correctly no matter which side is facing the viewer.</p>
+
+<p class="exampleTitle,xt"><i>Example 6-4. Constructing a Double-Sided HTML Element </i></p>
+
+<p class="code,x">&lt;div id=&quot;backface1&quot; class=&quot;container perspective &quot;&gt;</p>
+
+<p class="code,x">&lt;div class=&quot;legend&quot;&gt;</p>
+
+<p class="code,x">One-Sided, Visible</p>
+
+<p class="code,x">&lt;/div&gt;</p>
+
+<p class="code,x">&lt;div class=&quot;code&quot;&gt;{backface-visibility: visible;}&lt;/div&gt;</p>
+
+<p class="code,x">&lt;div class=&quot;cardBorder&quot;&gt;</p>
+
+<p class="code,x">&lt;div class=&quot;card backface frontside&quot;&gt;</p>
+
+<p class="code,x">FRONT</p>
+
+<p class="code,x">&lt;/div&gt;</p>
+
+<p class="code,x">&lt;/div&gt;</p>
+
+<p class="code,x">&lt;/div&gt;</p>
+
+<p class="code,x">&nbsp;</p>
+
+<p class="code,x">&lt;div id=&quot;backface2&quot; class=&quot;container perspective &quot;&gt;</p>
+
+<p class="code,x">&lt;div class=&quot;legend&quot;&gt;</p>
+
+<p class="code,x">One-Sided, Hidden</p>
+
+<p class="code,x">&lt;/div&gt;</p>
+
+<p class="code,x">&lt;div class=&quot;code&quot;&gt;{backface-visibility: hidden;}&lt;/div&gt;</p>
+
+<p class="code,x">&lt;div class=&quot;cardBorder&quot;&gt;</p>
+
+<p class="code,x">&lt;div class=&quot;card nobackface frontside&quot;&gt;</p>
+
+<p class="code,x">FRONT</p>
+
+<p class="code,x">&lt;/div&gt;</p>
+
+<p class="code,x">&lt;/div&gt;</p>
+
+<p class="code,x">&lt;/div&gt;</p>
+
+<p class="code,x">&nbsp;</p>
+
+<p class="code,x">&lt;div id=&quot;backface3&quot; class=&quot;container perspective &quot;&gt;</p>
+
+<p class="code,x">&lt;div class=&quot;legend&quot;&gt;</p>
+
+<p class="code,x">Two-Sided, Visible</p>
+
+<p class="code,x">&lt;/div&gt;</p>
+
+<p class="code,x">&lt;div class=&quot;code&quot;&gt;{backface-visibility: visible;}&lt;/div&gt;</p>
+
+<p class="code,x">&lt;div class=&quot;cardBorder&quot;&gt;</p>
+
+<p class="code,x">&lt;div class=&quot;card backface frontside&quot;&gt;</p>
+
+<p class="code,x">FRONT</p>
+
+<p class="code,x">&lt;/div&gt;</p>
+
+<p class="code,x">&lt;div class=&quot;card backface backside&quot;&gt;</p>
+
+<p class="code,x">BACK</p>
+
+<p class="code,x">&lt;/div&gt;</p>
+
+<p class="code,x">&lt;/div&gt;</p>
+
+<p class="code,x">&lt;/div&gt;</p>
+
+<p class="code,x">&nbsp;</p>
+
+<p class="code,x">&lt;div id=&quot;backface4&quot; class=&quot;container perspective &quot;&gt;</p>
+
+<p class="code,x">&lt;div class=&quot;legend&quot;&gt;</p>
+
+<p class="code,x">Two-Sided, Hidden</p>
+
+<p class="code,x">&lt;/div&gt;</p>
+
+<p class="code,x">&lt;div class=&quot;code&quot;&gt;{backface-visibility: hidden;}&lt;/div&gt;</p>
+
+<p class="code,x">&lt;div class=&quot;cardBorder&quot;&gt;</p>
+
+<p class="code,x">&lt;div class=&quot;card nobackface frontside&quot;&gt;</p>
+
+<p class="code,x">FRONT</p>
+
+<p class="code,x">&lt;/div&gt;</p>
+
+<p class="code,x">&lt;div class=&quot;card nobackface backside&quot;&gt;</p>
+
+<p class="code,x">BACK</p>
+
+<p class="code,x">&lt;/div&gt;</p>
+
+<p class="code,x">&lt;/div&gt;</p>
+
+<p class="code,x">&lt;/div&gt;</p>
+
+<p class="code,x">&nbsp;</p>
+
+<p class="body_Text,b">The listing in example 6-5 shows the style declarations from file css/css3dbackfaces.css. First, we define the frontside and backside classes somewhat counter-intuitively. frontside is intended for the front of the card, but because our example is intended to illustrate back face rendering, we are going to rotate the card away from the viewer by applying a 210-degree rotation about the Y-axis. Conversely, the back of the card is rotated toward the viewer by 30 degrees. The two sides of the card line up because their rotations are 180 degrees apart. When combined with hiding the back face using the nobackface class, we get a perfect two-sided card like the card on the bottom right. The class nobackface sets the property backface-visibility to hidden to produce the desired result.</p>
+
+<p class="exampleTitle,xt"><i>Example 6-5. CSS Declarations for Creating Double-sided Objects </i></p>
+
+<p class="code,x">.frontside {</p>
+
+<p class="code,x">-webkit-transform: rotateY(210deg);</p>
+
+<p class="code,x">-moz-transform: rotateY(210deg);</p>
+
+<p class="code,x">-o-transform: rotateY(210deg);</p>
+
+<p class="code,x">transform: rotateY(210deg);</p>
+
+<p class="code,x">line-height:160px;</p>
+
+<p class="code,x">font-size:40px;</p>
+
+<p class="code,x">color:White;</p>
+
+<p class="code,x">background-color:DarkCyan;</p>
+
+<p class="code,x">border-color:Black;</p>
+
+<p class="code,x">box-shadow:2px 2px 2px Black;</p>
+
+<p class="code,x">}</p>
+
+<p class="code,x">&nbsp;</p>
+
+<p class="code,x">.backside {</p>
+
+<p class="code,x">-webkit-transform: rotateY(30deg);</p>
+
+<p class="code,x">-moz-transform: rotateY(30deg);</p>
+
+<p class="code,x">-o-transform: rotateY(30deg);</p>
+
+<p class="code,x">transform: rotateY(30deg);</p>
+
+<p class="code,x">line-height:160px;</p>
+
+<p class="code,x">font-size:40px;</p>
+
+<p class="code,x">color:White;</p>
+
+<p class="code,x">background-color:DarkRed;</p>
+
+<p class="code,x">border-color:Black;</p>
+
+<p class="code,x">box-shadow:2px 2px 2px Black;</p>
+
+<p class="code,x">opacity:0.8;</p>
+
+<p class="code,x">}</p>
+
+<p class="code,x">&nbsp;</p>
+
+<p class="code,x">.backface {</p>
+
+<p class="code,x">-webkit-backface-visibility: visible;</p>
+
+<p class="code,x">-moz-backface-visibility: visible;</p>
+
+<p class="code,x">-o-backface-visibility: visible;</p>
+
+<p class="code,x">backface-visibility: visible;</p>
+
+<p class="code,x">}</p>
+
+<p class="code,x">&nbsp;</p>
+
+<p class="code,x">.nobackface {</p>
+
+<p class="code,x">-webkit-backface-visibility: hidden;</p>
+
+<p class="code,x">-moz-backface-visibility: hidden;</p>
+
+<p class="code,x">-o-backface-visibility: hidden;</p>
+
+<p class="code,x">backface-visibility: hidden;</p>
+
+<p class="code,x">}</p>
+
+<h2>A Summary of CSS Transform Properties</h2>
+
+<p class="body_Text,b">This section covered the transform properties CSS provides for adding 3D effects to HTML elements. These properties are summarized in Table 6-2.</p>
+
+<p class="tableTitle,tt"><i>Table 6-2. CSS Transform Properties </i></p>
+
+<table>
+	<tbody>
+		<tr>
+			<td>
+			<p class="cellHeading,th"><b>Property</b></p>
+			</td>
+			<td>
+			<p class="cellHeading,th"><b>Description</b></p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+			<p class="cellCode,tc">transform</p>
+			</td>
+			<td>
+			<p class="cellBody,tb">Applies a transformation using one or more transform methods (see Table 6-1)</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+			<p class="cellCode,tc">transform-origin</p>
+			</td>
+			<td>
+			<p class="cellBody,tb">Defines the origin of all transformations (default: 50% 50% 0)</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+			<p class="cellCode,tc">perspective</p>
+			</td>
+			<td>
+			<p class="cellBody,tb">Specifies perspective depth in CSS distance units (default: 0 = no perspective)</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+			<p class="cellCode,tc">perspective-origin</p>
+			</td>
+			<td>
+			<p class="cellBody,tb">Specifies the perspective vanishing point in XY coordinates</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+			<p class="cellCode,tc">transform-style</p>
+			</td>
+			<td>
+			<p class="cellBody,tb">Specifies whether descendants of a 3D element are rendered flat or in 3D</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+			<p class="cellCode,tc">backface-visibility</p>
+			</td>
+			<td>
+			<p class="cellBody,tb">Specifies whether or not elements facing away from the screen are rendered</p>
+			</td>
+		</tr>
+	</tbody>
+</table>
+
+<p class="body_Text,b">As we have seen, CSS Transforms provide a powerful way to add 3D effects to page elements. CSS Transforms become even more powerful when we create dynamic effects, by combining them with transitions and animations.</p>
+
+<p class="note,n">The examples in this section were heavily inspired by David DeSandro&rsquo;s great blog site &ldquo;24 Ways&rdquo; (as in, 24 ways to impress your friends). David was kind enough to grant me permission to liberally adapt his work. Refer to the examples at http://24ways.org/2010/intro-to-css-3d-transforms/ and other postings for a wealth of CSS 3D information.</p>
+
+<h1>CSS Transitions</h1>
+
+<p class="body_Text,b">CSS Transitions allow gradual changes to properties over time. CSS Transitions are a lot like the Tween.js tweens we explored in the previous chapter. However, these effects are built in to the browser; there is no need for a helper JavaScript library. While our focus in this chapter is on animating 3D properties, it is worth noting that CSS transitions can be used to animate most (though not all) CSS properties: width, position, color, z-index, opacity and so on.</p>
+
+<p class="body_Text,b">The basic syntax for a CSS Transition is as follows:</p>
+
+<p class="body_Text,b">transition : property-name duration timing-function delay-time;</p>
+
+<p class="body_Text,b">Where</p>
+
+<p class="listSimple,ls">property-name is the name of an individual property, the keyword all to specify that this transition applies to all properties being changed, or the keyword none to specify that it applies to none of the properties.</p>
+
+<p class="listSimple,ls">duration is a time value, in seconds or milliseconds, that specifies the length of time the transition will take</p>
+
+<p class="listSimple,ls">timing-function is the name of a timing function for animating the transition. It can be one of linear, ease, ease-in, ease-out, ease-in-out, or cubic-bezier</p>
+
+<p class="listSimple,ls">delay-time specifies an amount of time to wait (in seconds or milliseconds) before beginning the transition.</p>
+
+<p class="body_Text,b">transition is actually a shorthand CSS property for the four individual CSS properties transition-property, transition-duration, transition-timing-function and transition-delay. Let&rsquo;s see how this works with an example. Open the file Chapter 6/css3dtransitions.html, depicted in Figure 6-8. There are two cards. Clicking on either causes it to flip to the other side, using the double-sided technique described in the previous section. The flip transition takes two seconds, with a slight ease in and out. The cards also change color, from their original DarkCyan to Goldenrod. However, the card on the left changes color as it flips, while the card on the right changes color after it flips.</p>
+
+<p class="figureHolder,gh"><img alt="image8.png" src="embedded:image8.png" /></p>
+
+<p class="figureTitle,gt"><i>Figure 6-8. Using CSS Transitions to Animate Properties</i></p>
+
+<p>&nbsp;</p>
+
+<p class="body_Text,b">The HTML defines the front and back of each card similarly. The primary difference between the two cards is the use of class easeAll2sec for the card on the left and class easeTransform2secColor5secDelay for the card on the right. We will look at those classes in a moment.</p>
+
+<p class="code,x">&lt;div id=&quot;transition1&quot; class=&quot;container perspective &quot;&gt;</p>
+
+<p class="code,x">&lt;div class=&quot;legend&quot;&gt;</p>
+
+<p class="code,x">All Properties</p>
+
+<p class="code,x">&lt;/div&gt;</p>
+
+<p class="code,x">&lt;div class=&quot;code&quot;&gt;transition:all 2s;&lt;/div&gt;</p>
+
+<p class="code,x">&lt;div class=&quot;cardBorder&quot;&gt;</p>
+
+<p class="code,x">&lt;div id=&quot;front1&quot;</p>
+
+<p class="code,x">class=&quot;card nobackface frontside clickable easeAll2sec&quot;&gt;</p>
+
+<p class="code,x">FRONT</p>
+
+<p class="code,x">&lt;/div&gt;</p>
+
+<p class="code,x">&lt;div id=&quot;back1&quot;</p>
+
+<p class="code,x">class=&quot;card nobackface backside clickable easeAll2sec&quot;&gt;</p>
+
+<p class="code,x">BACK</p>
+
+<p class="code,x">&lt;/div&gt;</p>
+
+<p class="code,x">&lt;/div&gt;</p>
+
+<p class="code,x">&lt;/div&gt;</p>
+
+<p class="code,x">&nbsp;</p>
+
+<p class="code,x">&lt;div id=&quot;transition2&quot; class=&quot;container perspective &quot;&gt;</p>
+
+<p class="code,x">&lt;div class=&quot;legend&quot;&gt;</p>
+
+<p class="code,x">Individual Properties</p>
+
+<p class="code,x">&lt;/div&gt;</p>
+
+<p class="code,x">&lt;div class=&quot;code&quot;&gt;transition:transform 2s,</p>
+
+<p class="code,x">background-color 5s linear 2s;&lt;/div&gt;</p>
+
+<p class="code,x">&lt;div class=&quot;cardBorder&quot;&gt;</p>
+
+<p class="code,x">&lt;div id=&quot;front2&quot;</p>
+
+<p class="code,x">class=&quot;card nobackface frontside clickable easeTransform2secColor5secDelay&quot;&gt;</p>
+
+<p class="code,x">FRONT</p>
+
+<p class="code,x">&lt;/div&gt;</p>
+
+<p class="code,x">&lt;div id=&quot;back2&quot;</p>
+
+<p class="code,x">class=&quot;card nobackface backside clickable easeTransform2secColor5secDelay&quot;&gt;</p>
+
+<p class="code,x">BACK</p>
+
+<p class="code,x">&lt;/div&gt;</p>
+
+<p class="code,x">&lt;/div&gt;</p>
+
+<p class="code,x">&lt;/div&gt;</p>
+
+<p class="body_Text,b">The effect is triggered on a mouse click. We make this happen with a little jQuery magic that adds click handlers to the front and back of each card. It uses a Boolean for each to keep track of which side is showing, and adds or removes the flip and goGold classes as needed. flip rotates the card 180 degrees; goGold sets the color to Goldenrod. Without CSS transitions, these changes would take effect immediately, but with transitions, they animate smoothly from one state to the other over time.</p>
+
+<p class="code,x">&lt;script type=&quot;text/javascript&quot;&gt;</p>
+
+<p class="code,x">&nbsp;</p>
+
+<p class="code,x">var front1 = true;</p>
+
+<p class="code,x">var front2 = true;</p>
+
+<p class="code,x">$(document).ready(</p>
+
+<p class="code,x">function() {</p>
+
+<p class="code,x">$('#transition1 .clickable').click(function(){</p>
+
+<p class="code,x">// alert(&quot;Clicked&quot;);</p>
+
+<p class="code,x">if (front1)</p>
+
+<p class="code,x">{</p>
+
+<p class="code,x">$('#front1').addClass('flip');</p>
+
+<p class="code,x">$('#back1').addClass('flip');</p>
+
+<p class="code,x">$('#front1').addClass('goGold');</p>
+
+<p class="code,x">$('#back1').addClass('goGold');</p>
+
+<p class="code,x">}</p>
+
+<p class="code,x">else</p>
+
+<p class="code,x">{</p>
+
+<p class="code,x">$('#front1').removeClass('flip');</p>
+
+<p class="code,x">$('#back1').removeClass('flip');</p>
+
+<p class="code,x">$('#front1').removeClass('goGold');</p>
+
+<p class="code,x">$('#back1').removeClass('goGold');</p>
+
+<p class="code,x">}</p>
+
+<p class="code,x">&nbsp;</p>
+
+<p class="code,x">front1 = !front1;</p>
+
+<p class="code,x">});</p>
+
+<p class="code,x">&nbsp;</p>
+
+<p class="code,x">$('#transition2 .clickable').click(function(){</p>
+
+<p class="code,x">if (front2)</p>
+
+<p class="code,x">{</p>
+
+<p class="code,x">$('#front2').addClass('flip');</p>
+
+<p class="code,x">$('#back2').addClass('flip');</p>
+
+<p class="code,x">$('#front2').addClass('goGold');</p>
+
+<p class="code,x">$('#back2').addClass('goGold');</p>
+
+<p class="code,x">}</p>
+
+<p class="code,x">else</p>
+
+<p class="code,x">{</p>
+
+<p class="code,x">$('#front2').removeClass('flip');</p>
+
+<p class="code,x">$('#back2').removeClass('flip');</p>
+
+<p class="code,x">$('#front2').removeClass('goGold');</p>
+
+<p class="code,x">$('#back2').removeClass('goGold');</p>
+
+<p class="code,x">}</p>
+
+<p class="code,x">&nbsp;</p>
+
+<p class="code,x">front2 = !front2;</p>
+
+<p class="code,x">});</p>
+
+<p class="code,x">&nbsp;</p>
+
+<p class="code,x">}</p>
+
+<p class="code,x">&nbsp;</p>
+
+<p class="code,x">);</p>
+
+<p class="code,x">&nbsp;</p>
+
+<p class="code,x">&lt;/script&gt;</p>
+
+<p class="code,x">&nbsp;</p>
+
+<p class="body_Text,b">The CSS for this example can be found in file css/css3dtransitions.css. See the listing in Example 6-6.</p>
+
+<p class="body_Text,b">The front and back of the card are defined with the appropriate rotations defined in the classes frontside and backside; when combined with the class flip, they rotate by 180 degrees to flip the card over. goGold is the class used to change the element&rsquo;s background color to goldenrod. The classes in bold define the two different transitions. easeAll2sec is simple: it transitions all changed properties in two seconds with a subtle ease in/out (using the default value of ease).</p>
+
+<p class="body_Text,b">easeTransform2secColor5secDelay is more involved. It actually contains two separate transitions, one for the transform and one for the background color, separated by commas. The transform transition is exactly like easeAll2Sec, a two second transition with subtle easing. The background color transition is different: it is a five second linear interpolation of the color that starts after two seconds, using the fourth argument to the transition property, delay time.</p>
+
+<p class="exampleTitle,xt"><i>Example 6-6. Specifying CSS Transitions </i></p>
+
+<p class="code,x">.frontside {</p>
+
+<p class="code,x">-webkit-transform: rotateY(0deg);</p>
+
+<p class="code,x">-moz-transform: rotateY(0deg);</p>
+
+<p class="code,x">-o-transform: rotateY(0deg);</p>
+
+<p class="code,x">transform: rotateY(0deg);</p>
+
+<p class="code,x">&hellip;</p>
+
+<p class="code,x">}</p>
+
+<p class="code,x">&nbsp;</p>
+
+<p class="code,x">.backside {</p>
+
+<p class="code,x">-webkit-transform: rotateY(180deg);</p>
+
+<p class="code,x">-moz-transform: rotateY(180deg);</p>
+
+<p class="code,x">-o-transform: rotateY(180deg);</p>
+
+<p class="code,x">transform: rotateY(180deg);</p>
+
+<p class="code,x">&hellip;</p>
+
+<p class="code,x">}</p>
+
+<p class="code,x">&nbsp;</p>
+
+<p class="code,x">.frontside.flip {</p>
+
+<p class="code,x">-webkit-transform: rotateY(-180deg);</p>
+
+<p class="code,x">-moz-transform: rotateY(-180deg);</p>
+
+<p class="code,x">-o-transform: rotateY(-180deg);</p>
+
+<p class="code,x">transform: rotateY(-180deg);</p>
+
+<p class="code,x">&nbsp;</p>
+
+<p class="code,x">}</p>
+
+<p class="code,x">&nbsp;</p>
+
+<p class="code,x">&nbsp;</p>
+
+<p class="code,x">.backside.flip {</p>
+
+<p class="code,x">-webkit-transform: rotateY(0deg);</p>
+
+<p class="code,x">-moz-transform: rotateY(0deg);</p>
+
+<p class="code,x">-o-transform: rotateY(0deg);</p>
+
+<p class="code,x">transform: rotateY(0deg);</p>
+
+<p class="code,x">&nbsp;</p>
+
+<p class="code,x">}</p>
+
+<p class="code,x">&nbsp;</p>
+
+<p class="code,x">.goGold {</p>
+
+<p class="code,x">background-color:Goldenrod;</p>
+
+<p class="code,x">}</p>
+
+<p class="code,x">&nbsp;</p>
+
+<p class="codeEmphasis,xe"><b>.easeAll2sec { </b></p>
+
+<p class="codeEmphasis,xe"><b>-webkit-transition:all 2s; </b></p>
+
+<p class="codeEmphasis,xe"><b>-moz-transition:all 2s; </b></p>
+
+<p class="codeEmphasis,xe"><b>-o-transition:all 2s; </b></p>
+
+<p class="codeEmphasis,xe"><b>transition:all 2s; </b></p>
+
+<p class="codeEmphasis,xe"><b>} </b></p>
+
+<p class="codeEmphasis,xe">&nbsp;</p>
+
+<p class="codeEmphasis,xe"><b>.easeTransform2secColor5secDelay { </b></p>
+
+<p class="codeEmphasis,xe"><b>-webkit-transition:-webkit-transform 2s, background-color 5s linear 2s; </b></p>
+
+<p class="codeEmphasis,xe"><b>-moz-transition:-moz-transform 2s, background-color 5s linear 2s; </b></p>
+
+<p class="codeEmphasis,xe"><b>-o-transition:-o-transform 2s, background-color 5s linear 2s; </b></p>
+
+<p class="codeEmphasis,xe"><b>transition:transform 2s, background-color 5s linear 2s; </b></p>
+
+<p class="codeEmphasis,xe"><b>} </b></p>
+
+<p class="note,n">This section just scratches the surface of using CSS Transitions. There is an excellent article on the feature by Microsoft CSS development wizard Kirupa Chinnathambi on his blog at http://www.kirupa.com/html5/all_about_css_transitions.htm.</p>
+
+<p class="body_Text,b">Transitions are a straightforward way to create effects. But their use is limited to simple, one-time effects. If we want to create complex sequences and loops, we need to turn to another CSS3 technology: CSS Animations.</p>
+
+<h1>CSS Animations</h1>
+
+<p class="body_Text,b">CSS Animations provide a more general animation solution than CSS Transitions. Like the 3D key frame animations covered in the previous chapter, CSS Animations use a sequence of key frames, plus properties to control duration, timing function, delay time and looping. Let&rsquo;s take a look at some examples.</p>
+
+<p class="body_Text,b">Open the file Chapter 6/css3danimations.html. You will see three cards; click on each to trigger a different animation. The card on the top left does a simple one-time rotation about the Y-axis. The card on top right shakes left and right forever. The card on the bottom &ldquo;flies&rdquo; up and to the right, rotating about Y as it moves.</p>
+
+<p class="figureHolder,gh"><img alt="image9.png" src="embedded:image9.png" /></p>
+
+<p class="figureTitle,gt"><i>Figure 6-9. CSS 3D Animations </i></p>
+
+<p class="body_Text,b">The CSS for creating animations is comprised of two parts: an @keyframe rule, which creates a block of CSS in which you place the key frame data, and several properties you can define for an element:</p>
+
+<p class="listSimple,ls">animation-name is the name of a set of key frames declared in an @keyframe rule, to be used as the source of key frame data.</p>
+
+<p class="listSimple,ls">animation-duration specifies the length of the animation in seconds or milliseconds.</p>
+
+<p class="listSimple,ls">animation-timing-function is the name of a timing function for animating the key frames. It can be one of linear, ease, ease-in, ease-out, ease-in-out, or cubic-bezier</p>
+
+<p class="listSimple,ls">animation-delay specifies an amount of time to wait (in seconds or milliseconds) before beginning the animation</p>
+
+<p class="listSimple,ls">animation-iteration-count specifies the number of times to play the animation. The default is 1. The keyword infinite may also be used to define a forever looping animation.</p>
+
+<p class="listSimple,ls">animation-direction determines whether the animation plays forward, in reverse, or alternates forward and reverse playback for multiple iterations. Valid values are normal (forward), reverse, alternate (play forward and then reverse, alternating) and alternate-reverse (play in reverse and the forward, alternating).</p>
+
+<p class="body_Text,b">All of the above properties can be combined using the CSS shorthand property animation as follows:</p>
+
+<p class="body_Text,b">animation: name duration timing-function delay iteration-count direction;</p>
+
+<p class="body_Text,b">The CSS for the example in Figure 6-9 can be found in example file css/css3danimations.css. The excerpt in Example 6-7 shows the important fragments. We have @keyframe rules that set up the key frames kfRotateY and kfRotateMinusY (for rotating the front and back sides of the card, respectively), kfShake for the shaking animation, and kfFly for the flying animation. We then define individual classes for each of the animation, with different parameters. Class animRotateY and animRotateMinusY define infinitely looping linear interpolation animations to rotate the element about the Y-axis. These are created with simple key frame data that goes from the initial frame to the end frame.</p>
+
+<p class="body_Text,b">Class kfShake is more complicated: it uses key frame data with four frames at 0%, 25%, 50% and 100% respectively, to define translations in X and Y and a rotation about Z. Finally, class kfFly is still more complex, defining a series of translations in the key frames, a custom cubic Bezier function for interpolating, and multiple iterations with the direction alternating from forward to reverse. kfFly only defines the flight path of the element; it also appears to &ldquo;flap its wings&rdquo; because the classes animRotateY and animRotateMinusY are added to the front/back of the element when clicked. So there are actually nested animations being applied to the card on the bottom.</p>
+
+<p class="exampleTitle,xt"><i>Example 6-7. CSS Declarations to Create Key Frame Animations </i></p>
+
+<p class="code,x">@-webkit-keyframes kfRotateY {</p>
+
+<p class="code,x">from {</p>
+
+<p class="code,x">-webkit-transform: rotateY(0deg);</p>
+
+<p class="code,x">}</p>
+
+<p class="code,x">&nbsp;</p>
+
+<p class="code,x">to {</p>
+
+<p class="code,x">-webkit-transform: rotateY(360deg);</p>
+
+<p class="code,x">}</p>
+
+<p class="code,x">}</p>
+
+<p class="code,x">&nbsp;</p>
+
+<p class="code,x">.animRotateY</p>
+
+<p class="code,x">{</p>
+
+<p class="code,x">-webkit-animation-duration: 2s;</p>
+
+<p class="code,x">-webkit-animation-name: kfRotateY;</p>
+
+<p class="code,x">-webkit-animation-iteration-count: infinite;</p>
+
+<p class="code,x">-webkit-animation-timing-function:linear;</p>
+
+<p class="code,x">}</p>
+
+<p class="code,x">&nbsp;</p>
+
+<p class="code,x">@-webkit-keyframes kfRotateMinusY {</p>
+
+<p class="code,x">from {</p>
+
+<p class="code,x">-webkit-transform: rotateY(-180deg);</p>
+
+<p class="code,x">}</p>
+
+<p class="code,x">&nbsp;</p>
+
+<p class="code,x">to {</p>
+
+<p class="code,x">-webkit-transform: rotateY(180deg);</p>
+
+<p class="code,x">}</p>
+
+<p class="code,x">}</p>
+
+<p class="code,x">&nbsp;</p>
+
+<p class="code,x">.animRotateMinusY</p>
+
+<p class="code,x">{</p>
+
+<p class="code,x">-webkit-animation-duration: 2s;</p>
+
+<p class="code,x">-webkit-animation-name: kfRotateMinusY;</p>
+
+<p class="code,x">-webkit-animation-iteration-count: infinite;</p>
+
+<p class="code,x">-webkit-animation-timing-function:linear;</p>
+
+<p class="code,x">}</p>
+
+<p class="code,x">&nbsp;</p>
+
+<p class="code,x">@-webkit-keyframes kfShake {</p>
+
+<p class="code,x">0% {</p>
+
+<p class="code,x">-webkit-transform:translate3d(0, 0, 0) rotateZ(0deg);</p>
+
+<p class="code,x">}</p>
+
+<p class="code,x">25% {</p>
+
+<p class="code,x">-webkit-transform: translate3d(0, -20px, 0) rotateZ(20deg);</p>
+
+<p class="code,x">}</p>
+
+<p class="code,x">50% {</p>
+
+<p class="code,x">-webkit-transform: translate3d(0, 0, 0) rotateZ(-20deg);</p>
+
+<p class="code,x">}</p>
+
+<p class="code,x">100% {</p>
+
+<p class="code,x">-webkit-transform: translate3d(0, -20px, 0) rotateZ(-20deg);</p>
+
+<p class="code,x">}</p>
+
+<p class="code,x">}</p>
+
+<p class="code,x">&nbsp;</p>
+
+<p class="code,x">.animShake</p>
+
+<p class="code,x">{</p>
+
+<p class="code,x">-webkit-animation-duration: .5s;</p>
+
+<p class="code,x">-webkit-animation-name: kfShake;</p>
+
+<p class="code,x">-webkit-animation-iteration-count: infinite;</p>
+
+<p class="code,x">-webkit-animation-timing-function:ease-in-out;</p>
+
+<p class="code,x">}</p>
+
+<p class="code,x">&nbsp;</p>
+
+<p class="code,x">@-webkit-keyframes kfFly {</p>
+
+<p class="code,x">0% {</p>
+
+<p class="code,x">-webkit-transform:translate3d(0, 0, 0);</p>
+
+<p class="code,x">}</p>
+
+<p class="code,x">25% {</p>
+
+<p class="code,x">-webkit-transform: translate3d(100px, -100px, 20px0);</p>
+
+<p class="code,x">}</p>
+
+<p class="code,x">50% {</p>
+
+<p class="code,x">-webkit-transform: translate3d(200px, -200px, 40px);</p>
+
+<p class="code,x">}</p>
+
+<p class="code,x">100% {</p>
+
+<p class="code,x">-webkit-transform: translate3d(400px, -300px, 20px);</p>
+
+<p class="code,x">}</p>
+
+<p class="code,x">}</p>
+
+<p class="code,x">&nbsp;</p>
+
+<p class="code,x">.animFly</p>
+
+<p class="code,x">{</p>
+
+<p class="code,x">-webkit-animation-duration: 2s;</p>
+
+<p class="code,x">-webkit-animation-name: kfFly;</p>
+
+<p class="code,x">-webkit-animation-iteration-count: 2;</p>
+
+<p class="code,x">-webkit-animation-timing-function:cubic-bezier(0.1, 0.2, 0.8, 1);</p>
+
+<p class="code,x">-webkit-animation-direction:alternate;</p>
+
+<p class="code,x">}</p>
+
+<p class="body_Text,b">You may have noticed that animRotateY and animRotateMinusY are defined with an animation-iteration-count of infinite, yet the top left card only rotates once. This is because the jQuery code for click handling stops the animation after an iteration (see code in bold):</p>
+
+<p class="code,x">$('#front1').click(function(){</p>
+
+<p class="code,x">$('#front1').addClass('animRotateY');</p>
+
+<p class="code,x">$('#back1').addClass('animRotateMinusY');</p>
+
+<p class="codeEmphasis,xe"><b>setTimeout(function(){ </b></p>
+
+<p class="codeEmphasis,xe"><b>$('#front1').removeClass('animRotateY'); </b></p>
+
+<p class="codeEmphasis,xe"><b>$('#back1').removeClass('animRotateMinusY'); </b></p>
+
+<p class="code,x">&nbsp;</p>
+
+<p class="code,x">}, 2000);</p>
+
+<p class="code,x">}</p>
+
+<p class="code,x">);</p>
+
+<p class="code,x">&nbsp;</p>
+
+<p class="body_Text,b">These classes were designed to infinitely loop so they could be reused in different animation effects, such as when it is combined with animFly. By defining them as infinitely looping we can easily control start and stop within the JavaScript for specific uses.</p>
+
+<h1>Pushing the Envelope of CSS</h1>
+
+<p class="body_Text,b">So far, the examples in this chapter largely consist of moving around flat tiles. These are excellent techniques for creating 3D user interface elements and transition effects, but fall a bit short of the 3D rendering we expect in today&rsquo;s games and other full 3D applications. That being said, some developers are pushing the boundaries of what can be done with this technology. The rest of this chapter surveys just how far we can take CSS3 to create great 3D effects.</p>
+
+<h2>Rendering 3D Objects</h2>
+
+<p class="body_Text,b">In previous sections saw that it took a bit of HTML and CSS work to make a two-sided flat object. It takes even more effort to create an object with depth, such as a cube. There are several sites dedicated to CSS3 that show great examples of how to do this. Figure 6-10 depicts a 3D virtual product box created by German-based Dirk Weber for his HTML5 development site <a href="http://www.eleqtriq.com">http://www.eleqtriq.com</a>. The box has front, back, sides, top, and bottom, and can be rotated. It even has simulated reflections!</p>
+
+<p class="figureHolder,gh"><img alt="image10.png" src="embedded:image10.png" /></p>
+
+<p class="figureTitle,gt"><i>Figure 6-10. Rotatable 3D Object Built with CSS (http://www.eleqtriq.com/2010/11/natural-object-rotation-with-css3-3d/)</i></p>
+
+<p class="body_Text,b">The team at Codrops (http://tympanus.net/codrops/), a web design and development blog, have taken the box concept a step further, creating a 3D virtual book. You can open the cover to look inside, and even turn the pages. See Figure 6-11.</p>
+
+<p class="figureHolder,gh"><img alt="image11.png" src="embedded:image11.png" /></p>
+
+<p class="figureTitle,gt"><i>Figure 6-11. 3D Virtual Book Showcase (http://tympanus.net/codrops/2013/01/08/3d-book-showcase/)</i></p>
+
+<p class="body_Text,b">Creating full 3D objects like those above involves making one or more HTML elements for each face, defining several CSS classes and typically some JavaScript for the logic. It is not exactly easy, but the results can be worth it. Check out the sites listed here and in Appendix X on CSS3 to see the groundbreaking work developers are doing with CSS 3D. Most of these sites share their code freely, so you will have a great starting point for your own CSS 3D work.</p>
+
+<h2>Rendering 3D Environments</h2>
+
+<p class="body_Text,b">Given the foundations of CSS 3D&mdash; essentially a technology for manipulating rectangular objects&mdash;it may seem out of reach to attempt to build something like an immersive game environment. Incredibly, UK-based developer Keith Clark has done just that: a demo of a first-person shooter environment in the style of Doom, built entirely with JavaScript and CSS 3D transforms. The result is depicted in Figure 6-12.</p>
+
+<p class="figureHolder,gh"><img alt="image12.png" src="embedded:image12.png" /></p>
+
+<p class="figureTitle,gt"><i>Figure 6-12. First-Person Shooter Demo Built with CSS 3D and JavaScript (http://blog.keithclark.co.uk/creating-3d-worlds-with-html-and-css/)</i></p>
+
+<p class="body_Text,b">Clark&rsquo;s work demonstrates features that barely seem possible in CSS3, even with 3D transforms. These include:</p>
+
+<p class="listBullet,lb">3D Geometry. CSS only allows us to work with rectangles. That appears limiting at first until we realize that even true 3D rendering systems typically work by composing many flat polygons&mdash;usually triangles or quads&mdash;into more complex shapes. Also, PNG images can make use of the alpha channel to create cutout shapes within a single quad. Working with those two components, Clark was able to build cylinders, guns, the shooter&rsquo;s hand and other realistic 3D geometry.</p>
+
+<p class="listBullet,lb">Camera, Navigation and Collision. CSS support for perspective is rudimentary, but Clark figured out how to move a virtual camera in real time based on keyboard input, and calculate collisions by projecting the player&rsquo;s position onto the 2D ground plane and comparing it to a hand-crafted 2D height map.</p>
+
+<p class="listBullet,lb">Lighting and Shadows. CSS doesn&rsquo;t support lighting of elements. To create a realistic lighting model, Clark needed to construct normal vectors for each quad, create virtual light sources in JavaScript, and render off-screen texture maps to a &lt;canvas&gt; element that were then blended with the base texture map to create a lit surface.</p>
+
+<p class="body_Text,b">Keith Clark&rsquo;s work goes beyond what most developers would venture to do. An environment like this would be much more straightforward to create using WebGL with a library like Three.js. However, the project represents a significant case study in what is possible with CSS3. For more information, see his description of the project at http://blog.keithclark.co.uk/creating-3d-worlds-with-html-and-css/.</p>
+
+<h2>Using CSS Custom Filters for Advanced Shader Effects</h2>
+
+<p class="body_Text,b">Some browsers are experimenting with allowing developers to use the GLSL shading language to manipulate CSS elements by applying arbitrary 3D effects. This technology, pioneered by Adobe Systems, is known as CSS Custom Filters (formerly CSS Shaders). Figure 6-13 shows the before/after of a DOM element using a CSS Custom Filter to create a &ldquo;crumple&rdquo; effect. When the mouse is rolled over the element, a shader program distorts the vertices that comprise the display rectangle for the element, animating the vertices over a short time interval until they appear like crumpled paper. What is most significant about animating with CSS Custom Filters is that the contents of the DOM element are standard HTML: a few bits of text with styles, plus an image. CSS Custom Filters allow web developers to leverage their existing knowledge of HTML while creating new eye-catching interactive effects.</p>
+
+<p class="figureHolder,gh"><img alt="image13.jpg" src="embedded:image13.jpg" /></p>
+
+<p class="figureTitle,gt"><i>Figure 6-13. Crumple Shader, a CSS3 Custom Filter by Altered Qualia (http://alteredqualia.com/css-shaders/crumple.html) </i></p>
+
+<p class="body_Text,b">CSS Custom Filters use a subset of the GLSL shading language (GLSL ES). While it is nearly identical to the GLSL ES used in WebGL, there are a few very small differences. For security reasons, a CSS Custom Filter is not allowed to directly access the pixel color of any page element; rather, the filter must generate a blend color that is ultimately combined with the destination pixel of the element to produce a final color. In addition, the browsers supply a few predefined values as built-in uniform variables, such as the element&rsquo;s 3D transformation matrix as defined by its standard CSS 3D transform (see above). One other important difference is that the use of a CSS Custom Filter is optional, whereas a shader is required in order to render with WebGL.</p>
+
+<p class="note,n">Note that CSS Custom Filters are still an experimental feature, and only supported in some browsers. As of this writing, the feature is also in danger of being shelved in favor of integrating DOM elements into the WebGL specification by allowing their use as texture maps. This is all very much a work in progress. In the meantime, the feature is still supported in Chrome and can be accessed by using a special command-line switch (--enable-css-shaders), or the user preference Enable CSS Shaders.</p>
+
+<h2>Rendering CSS 3D Using Three.js</h2>
+
+<p class="body_Text,b">Even today, in 2013, there are some browsers that do not support WebGL. Mobile Safari for iOS comes to mind. So there may be occasion when it is necessary to use other web technologies as fallbacks for creating 3D. CSS3 is one, as we have seen. However, doing deep 3D development can get pretty labor-intensive, involving dozens of classes and HTML elements to create a small set of 3D objects.</p>
+
+<p class="body_Text,b">Recently, Mr.doob got inspired to create a CSS-based rendering system for Three.js. One of the great things about this library is that it can render using various browser display technologies. Three.js has a plug-in rendering architecture, with renderers built for WebGL, 2D Canvas, SVG and now, CSS.</p>
+
+<p class="body_Text,b">The Three.js CSS renderer translates, rotates and scales objects using CSS 3D transforms, which is ideal for mapping interactive page elements into a 3D space. Refer to figure 6-13, which depicts an interactive periodic table. Each entry in the table is a fully functioning DIV tag, so it can be populated with HTML and styled using CSS. The CSS renderer is a great choice for creating innovate layouts of mostly rectangular, text-rich objects.</p>
+
+<p class="figureHolder,gh"><img alt="image14.png" src="embedded:image14.png" /></p>
+
+<p class="figureTitle,gt"><i>Figure 6-14. An interactive Periodic Table, built with Three.js, rendered using CSS 3D transforms (http://mrdoob.github.io/three.js/examples/css3d_periodictable.html) </i></p>
+
+<h1>Chapter Summary</h1>
+
+<p class="body_Text,b">This chapter explored browser&rsquo;s built-in CSS3 features for creating 3D effects: CSS Transforms, CSS Transitions and CSS Animations. We saw how to use CSS Transforms to apply 3D translation, rotation and scale to elements; render them with and without perspective; propagate 3D transforms down through the DOM hierarchy; and control rendering of an element&rsquo;s back faces. We created simple animation effects using CSS Transitions, and more complex ones using CSS Animations.</p>
+
+<p class="body_Text,b">CSS3 provides powerful capabilities for creating 3D user interface elements and transition effects, but it falls a bit short of the 3D rendering we expect in today&rsquo;s games and other graphically intensive 3D applications. On the other hand, the effects are are easy to create; they can be one mostly in CSS with a little JavaScript; they run universally across browsers and devices; and, most significantly, they are built in to the browsers and there require no additional libraries. In some rare cases, when we want to push the envelope on using CSS3 we can do serious JavaScript hacking, or lean on a library like Three.js that renders to CSS3.</p>
+
+<div class="footer">
+<p>� PAGE �1�</p>
+</div>
